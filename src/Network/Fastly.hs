@@ -209,7 +209,6 @@ import qualified Network.HTTP.Client
 import Network.HTTP.Client.TLS
 import Network.HTTP.Types
 import System.IO.Unsafe
-import System.Locale
 
 data FastlyResponse a = FastlyResponse
                         { fastlyResponseRateLimitRemaining :: Int
@@ -584,7 +583,7 @@ createDomain c (ServiceId s) (ServiceVersionNumber v) n = post c $ \r -> urlEnco
 toJsonSpaceList :: [Text] -> Value
 toJsonSpaceList = String . T.intercalate " "
 
-fromJsonSpaceList :: Monad m => Value -> m [Text]
+fromJsonSpaceList :: (MonadFail m, Monad m) => Value -> m [Text]
 fromJsonSpaceList (String ts) = return $ T.splitOn " " ts
 fromJsonSpaceList wat = fail "Expected a String, got something else for JSON space-delimited list"
 
